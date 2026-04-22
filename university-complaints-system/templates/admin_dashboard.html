@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الأدمن</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="main-navbar">
+    <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+    <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+        <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+    </button>
+
+    <div class="navbar-links" id="navbarLinks">
+        <a href="/">الصفحة الرئيسية</a>
+        <a href="/view_employees">الموظفون</a>
+        <a href="/complaints_analysis">التحليل</a>
+        <a href="/logout" class="logout-link">تسجيل الخروج</a>
+    </div>
+</nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>لوحة تحكم المدير</h1>
+            <p class="page-subtitle">
+                مرحبًا بك {{ full_name }}، يمكنك من هنا متابعة المنصة وإدارة الموظفين والأقسام والتصنيفات
+            </p>
+        </div>
+
+        <div class="stats-grid admin-stats-grid">
+            <div class="stat-card">
+                <h3>عدد الموظفين</h3>
+                <div class="stat-number">{{ total_employees }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>عدد الطلاب</h3>
+                <div class="stat-number">{{ total_students }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>عدد الشكاوى</h3>
+                <div class="stat-number">{{ total_complaints }}</div>
+            </div>
+        </div>
+
+        <div class="stats-grid admin-insights-grid">
+    <div class="stat-card insight-card">
+    <h3>متوسط التقييم</h3>
+
+    <div class="admin-rating-stars">
+        {% set rounded_rating = average_rating|round|int %}
+        {% for i in range(1, 6) %}
+            {% if i <= rounded_rating %}
+                <i class="fa-solid fa-star filled-star"></i>
+            {% else %}
+                <i class="fa-solid fa-star empty-star"></i>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="admin-rating-number">{{ average_rating }} / 5</div>
+</div>
+
+    <div class="stat-card insight-card">
+        <h3>الشكاوى المقيمة</h3>
+        <div class="stat-number">{{ rated_complaints_count }}</div>
+    </div>
+
+    <div class="stat-card insight-card">
+        <h3>الشكاوى المتأخرة</h3>
+        <div class="stat-number">{{ overdue_complaints_count }}</div>
+    </div>
+
+    <div class="stat-card insight-card">
+        <h3>ضمن المهلة</h3>
+        <div class="stat-number">{{ on_time_complaints_count }}</div>
+    </div>
+</div>
+
+        <div class="grid grid-2 admin-charts-grid">
+            <div class="chart-card">
+                <h2>توزيع حالات الشكاوى</h2>
+                <canvas id="adminStatusDoughnutChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>مقارنة أعداد الحالات</h2>
+                <canvas id="adminStatusBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card admin-actions-card">
+            <h2>أدوات الإدارة</h2>
+            <p class="page-subtitle" style="text-align: right; margin-bottom: 18px;">
+                اختر العملية التي تريد تنفيذها
+            </p>
+
+            <div class="grid grid-2 admin-actions-grid">
+                <a href="/add_employee" class="admin-action-box">
+                    <span class="admin-action-title">إضافة موظف جديد</span>
+                    <span class="admin-action-desc">إضافة موظف وربطه بالقسم والجهة الفرعية</span>
+                </a>
+
+                <a href="/view_employees" class="admin-action-box">
+                    <span class="admin-action-title">عرض الموظفين الحاليين</span>
+                    <span class="admin-action-desc">مراجعة بيانات الموظفين الحاليين في النظام</span>
+                </a>
+
+                <a href="/manage_departments" class="admin-action-box">
+                    <span class="admin-action-title">إدارة الأقسام</span>
+                    <span class="admin-action-desc">إضافة الأقسام وتعديل مراحلها ومدة المعالجة</span>
+                </a>
+
+                <a href="/manage_categories" class="admin-action-box">
+                    <span class="admin-action-title">إدارة التصنيفات</span>
+                    <span class="admin-action-desc">ربط التصنيفات بالأقسام الأساسية المناسبة</span>
+                </a>
+
+                <a href="/complaints_analysis" class="admin-action-box">
+                    <span class="admin-action-title">تحليل الشكاوى</span>
+                    <span class="admin-action-desc">عرض مؤشرات الشكاوى حسب الأقسام والحالات</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+   <script>
+    const pendingComplaints = {{ pending_complaints }};
+    const inProgressComplaints = {{ in_progress_complaints }};
+    const resolvedComplaints = {{ resolved_complaints }};
+    const cancelledComplaints = {{ cancelled_complaints }};
+
+    const adminDoughnutCtx = document.getElementById('adminStatusDoughnutChart');
+    if (adminDoughnutCtx) {
+        new Chart(adminDoughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['بانتظار المعالجة', 'قيد المعالجة', 'محلولة', 'ملغاة'],
+                datasets: [{
+                    data: [pendingComplaints, inProgressComplaints, resolvedComplaints, cancelledComplaints],
+                    backgroundColor: ['#d4a24c', '#6ea8c7', '#5fa57a', '#c96b6b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Cairo',
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const adminBarCtx = document.getElementById('adminStatusBarChart');
+    if (adminBarCtx) {
+        new Chart(adminBarCtx, {
+            type: 'bar',
+            data: {
+                labels: ['بانتظار المعالجة', 'قيد المعالجة', 'محلولة', 'ملغاة'],
+                datasets: [{
+                    label: 'عدد الشكاوى',
+                    data: [pendingComplaints, inProgressComplaints, resolvedComplaints, cancelledComplaints],
+                    backgroundColor: ['#d4a24c', '#6ea8c7', '#5fa57a', '#c96b6b'],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: {
+                                family: 'Cairo'
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: 'Cairo'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    function toggleNavbar() {
+        const navLinks = document.getElementById("navbarLinks");
+        const navIcon = document.getElementById("navToggleIcon");
+
+        navLinks.classList.toggle("show");
+
+        if (navLinks.classList.contains("show")) {
+            navIcon.classList.remove("fa-bars");
+            navIcon.classList.add("fa-xmark");
+        } else {
+            navIcon.classList.remove("fa-xmark");
+            navIcon.classList.add("fa-bars");
+        }
+    }
+
+    let lastScrollTop = 0;
+    const navbar = document.querySelector(".main-navbar");
+
+    window.addEventListener("scroll", function () {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (navbar) {
+            if (currentScroll > lastScrollTop && currentScroll > 80) {
+                navbar.classList.add("navbar-hidden");
+            } else {
+                navbar.classList.remove("navbar-hidden");
+            }
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+</script>
+</body>
+</html>

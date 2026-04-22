@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الشكوى</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="main-navbar">
+        <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+        <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+            <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+        </button>
+
+        <div class="navbar-links" id="navbarLinks">
+            <a href="/department_complaints">شكاوى القسم</a>
+            <a href="/employee">لوحة الموظف</a>
+            <a href="/logout" class="logout-link">تسجيل الخروج</a>
+        </div>
+    </nav>
+
+    <div class="page-container employee-details-page">
+        <div class="page-header">
+            <h1>تفاصيل الشكوى</h1>
+            <p class="page-subtitle">يمكنك من هنا مراجعة الشكوى ومتابعة جميع تفاصيلها وسجل معالجتها</p>
+        </div>
+
+        {% if complaint %}
+            <div class="card details-main-card">
+                <p><strong>رقم الشكوى:</strong> {{ complaint.complaint_id }}</p>
+                <p><strong>اسم الطالب:</strong> {{ complaint.student_name }}</p>
+                <p><strong>العنوان:</strong> {{ complaint.title }}</p>
+                <p><strong>الوصف:</strong> {{ complaint.description }}</p>
+                <p><strong>التصنيف:</strong> {{ complaint.category_name }}</p>
+                <p><strong>القسم الأساسي:</strong> {{ complaint.department_name }}</p>
+
+                <p><strong>الحالة:</strong>
+                    {% if complaint.status == 'Pending' %}
+                        <span class="status-text status-pending">بانتظار المعالجة</span>
+                    {% elif complaint.status == 'In Progress' %}
+                        <span class="status-text status-progress">قيد المعالجة</span>
+                    {% elif complaint.status == 'Resolved' %}
+                        <span class="status-text status-resolved">محلولة</span>
+                    {% elif complaint.status == 'Cancelled' %}
+                        <span class="status-text status-cancelled">ملغاة</span>
+                    {% else %}
+                        {{ complaint.status }}
+                    {% endif %}
+                </p>
+
+                <p><strong>المرحلة الحالية:</strong> {{ complaint.stage_name }}</p>
+                <p><strong>مدة المعالجة المتوقعة:</strong> {{ complaint.sla_days }} يوم</p>
+
+                <p><strong>وضع المهلة الزمنية:</strong>
+                    {% if is_overdue %}
+                        <span class="status-overdue">متأخرة</span>
+                    {% else %}
+                        <span class="status-on-time">ضمن المدة</span>
+                    {% endif %}
+                </p>
+
+                <p><strong>تاريخ التقديم:</strong> {{ complaint.submitted_at }}</p>
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="card-soft center-text details-message-box">
+                <p style="font-weight: 700;">{{ message }}</p>
+            </div>
+        {% endif %}
+
+        {% if complaint.status in ['Resolved', 'Cancelled'] %}
+            <div class="card-soft center-text details-message-box">
+                <p style="font-weight: 700;">
+                    هذه الشكوى {{ 'محلولة' if complaint.status == 'Resolved' else 'ملغاة' }}،
+                    لذلك تم إيقاف التعديل عليها وأصبحت للعرض فقط.
+                </p>
+            </div>
+        {% endif %}
+
+        <div class="section-block">
+            <h2>المرفقات</h2>
+            {% if attachments %}
+                <div class="table-like-list details-list-wrap">
+                    {% for attachment in attachments %}
+                        <div class="card-soft">
+                            <p><strong>اسم الملف:</strong> {{ attachment.file_name }}</p>
+                            <p><a class="file-link" href="/uploads/{{ attachment.file_name }}" target="_blank">فتح / تحميل الملف</a></p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا توجد مرفقات لهذه الشكوى.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>الردود السابقة</h2>
+            {% if responses %}
+                <div class="table-like-list details-list-wrap">
+                    {% for response in responses %}
+                        <div class="card-soft">
+                            <p><strong>الرد:</strong> {{ response.response_text }}</p>
+                            <p><strong>تاريخ الرد:</strong> {{ response.response_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا توجد ردود سابقة على هذه الشكوى.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>تقييم الطالب على المعالجة</h2>
+
+            {% if feedback %}
+                <div class="card feedback-card">
+                    <p><strong>التقييم:</strong></p>
+                    <div class="feedback-stars-display">
+                        {% for i in range(1, 6) %}
+                            {% if i <= feedback.rating %}
+                                <i class="fa-solid fa-star filled-star"></i>
+                            {% else %}
+                                <i class="fa-solid fa-star empty-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <p><strong>ملاحظة الطالب:</strong>
+                        {% if feedback.feedback_note %}
+                            {{ feedback.feedback_note }}
+                        {% else %}
+                            لا توجد ملاحظة إضافية.
+                        {% endif %}
+                    </p>
+                    <p><strong>تاريخ التقييم:</strong> {{ feedback.feedback_date }}</p>
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لم يقم الطالب بتقييم المعالجة بعد.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if complaint.status != 'Resolved' and complaint.status != 'Cancelled' %}
+            <div class="section-block">
+                <h2>إضافة رد وتحديث الحالة</h2>
+                <div class="card form-card details-form-card">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>نص الرد</label>
+                            <textarea name="response_text" rows="5"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>الحالة الجديدة</label>
+                            <select name="status" required>
+                                <option value="Pending" {% if complaint.status == 'Pending' %}selected{% endif %}>بانتظار المعالجة</option>
+                                <option value="In Progress" {% if complaint.status == 'In Progress' %}selected{% endif %}>قيد المعالجة</option>
+                                <option value="Resolved" {% if complaint.status == 'Resolved' %}selected{% endif %}>تم الحل</option>
+                            </select>
+                        </div>
+
+                        <div class="actions-row" style="margin-top: 18px;">
+                            <button type="submit" name="action" value="update_status" class="btn btn-primary">حفظ الرد وتحديث الحالة</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h2>إدارة مراحل المعالجة</h2>
+                <div class="card form-card details-form-card">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>ملاحظة المعالجة</label>
+                            <textarea name="stage_note" rows="4"></textarea>
+                        </div>
+
+                        <div class="actions-row" style="margin-top: 18px;">
+                            {% if complaint.current_stage == 1 %}
+                                <button type="submit" name="action" value="next_stage" class="btn btn-primary">إرسال إلى المرحلة التالية</button>
+                            {% elif complaint.current_stage == 2 %}
+                                <button type="submit" name="action" value="next_stage" class="btn btn-primary">إرسال إلى المرحلة التالية</button>
+                                <button type="submit" name="action" value="previous_stage" class="btn btn-secondary">إرجاع إلى المرحلة السابقة</button>
+                            {% elif complaint.current_stage == 3 %}
+                                <button type="submit" name="action" value="previous_stage" class="btn btn-secondary">إرجاع إلى المرحلة السابقة</button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h2>تحويل الشكوى إلى قسم آخر</h2>
+                <div class="card form-card details-form-card">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>اختر القسم الأساسي الجديد</label>
+                            <select name="new_department_id" required>
+                                {% for department in departments %}
+                                    <option value="{{ department.department_id }}">{{ department.department_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ملاحظة التحويل</label>
+                            <textarea name="transfer_note" rows="4"></textarea>
+                        </div>
+
+                        <div class="actions-row" style="margin-top: 18px;">
+                            <button type="submit" name="action" value="transfer_department" class="btn btn-primary">تحويل الشكوى</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="section-block">
+            <h2>سجل المعالجة</h2>
+            {% if processing_logs %}
+                <div class="table-like-list details-list-wrap">
+                    {% for log in processing_logs %}
+                        <div class="card-soft">
+                            <p><strong>نوع الحركة:</strong>
+                                {% if log.action_type == 'forward' %}
+                                    إرسال إلى المرحلة التالية
+                                {% elif log.action_type == 'backward' %}
+                                    إرجاع إلى المرحلة السابقة
+                                {% elif log.action_type == 'transfer' %}
+                                    تحويل إلى قسم آخر
+                                {% else %}
+                                    {{ log.action_type }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>من المرحلة:</strong>
+                                {% if log.from_stage == 1 %}
+                                    المرحلة الأولى
+                                {% elif log.from_stage == 2 %}
+                                    المرحلة الثانية
+                                {% elif log.from_stage == 3 %}
+                                    المرحلة الثالثة
+                                {% else %}
+                                    {{ log.from_stage }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>إلى المرحلة:</strong>
+                                {% if log.to_stage == 1 %}
+                                    المرحلة الأولى
+                                {% elif log.to_stage == 2 %}
+                                    المرحلة الثانية
+                                {% elif log.to_stage == 3 %}
+                                    المرحلة الثالثة
+                                {% else %}
+                                    {{ log.to_stage }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>من القسم:</strong> {{ log.from_department_name }}</p>
+                            <p><strong>إلى القسم:</strong> {{ log.to_department_name }}</p>
+                            <p><strong>بواسطة:</strong> {{ log.handled_by_name }}</p>
+                            <p><strong>الملاحظة:</strong> {{ log.note }}</p>
+                            <p><strong>التاريخ:</strong> {{ log.action_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا يوجد سجل معالجة حتى الآن.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function toggleNavbar() {
+            const navLinks = document.getElementById("navbarLinks");
+            const navIcon = document.getElementById("navToggleIcon");
+
+            navLinks.classList.toggle("show");
+
+            if (navLinks.classList.contains("show")) {
+                navIcon.classList.remove("fa-bars");
+                navIcon.classList.add("fa-xmark");
+            } else {
+                navIcon.classList.remove("fa-xmark");
+                navIcon.classList.add("fa-bars");
+            }
+        }
+
+        let lastScrollTop = 0;
+        const navbar = document.querySelector(".main-navbar");
+
+        window.addEventListener("scroll", function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > lastScrollTop && currentScroll > 80) {
+                navbar.classList.add("navbar-hidden");
+            } else {
+                navbar.classList.remove("navbar-hidden");
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+</body>
+</html>

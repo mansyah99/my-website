@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحليل الشكاوى حسب القسم</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="main-navbar">
+        <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+        <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+            <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+        </button>
+
+        <div class="navbar-links" id="navbarLinks">
+            <a href="/admin">لوحة الأدمن</a>
+            <a href="/view_employees">الموظفون</a>
+            <a href="/logout" class="logout-link">تسجيل الخروج</a>
+        </div>
+    </nav>
+
+    <div class="page-container complaints-analysis-page">
+        <div class="page-header">
+            <h1>تحليل الشكاوى حسب القسم</h1>
+            <p class="page-subtitle">عرض مؤشرات كل قسم من حيث الحالات، الالتزام الزمني، ورضا الطلاب</p>
+        </div>
+
+        {% if departments_analysis %}
+            <div class="table-like-list complaints-analysis-list">
+                {% for department in departments_analysis %}
+                    <div class="card analysis-department-card">
+                        <h2 class="analysis-department-title">{{ department.department_name }}</h2>
+
+                        <div class="analysis-group-title">إحصائيات الحالة</div>
+                        <div class="analysis-stats-grid analysis-main-grid">
+                            <div class="analysis-stat-box">
+                                <p><strong>عدد الموظفين</strong></p>
+                                <p>{{ department.total_employees }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>عدد الشكاوى الكلي</strong></p>
+                                <p>{{ department.total_complaints }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>بانتظار المعالجة</strong></p>
+                                <p>{{ department.pending_complaints }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>قيد المعالجة</strong></p>
+                                <p>{{ department.in_progress_complaints }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>الشكاوى المحلولة</strong></p>
+                                <p>{{ department.resolved_complaints }}</p>
+                            </div>
+                            <div class="analysis-stat-box">
+                             <p><strong>الشكاوى الملغاة</strong></p>
+                             <p>{{ department.cancelled_complaints }}</p>
+                             </div>
+                        </div>
+
+                        <div class="analysis-group-title">إحصائيات الأداء</div>
+                        <div class="analysis-stats-grid analysis-performance-grid">
+                            <div class="analysis-stat-box">
+                                <p><strong>الشكاوى المقيمة</strong></p>
+                                <p>{{ department.rated_complaints_count }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>متوسط التقييم</strong></p>
+
+                                {% set dept_rating = department.average_rating if department.average_rating is not none else 0 %}
+                                {% set rounded_dept_rating = dept_rating|round|int %}
+
+                                <div class="analysis-rating-stars">
+                                    {% for i in range(1, 6) %}
+                                        {% if i <= rounded_dept_rating %}
+                                            <i class="fa-solid fa-star filled-star"></i>
+                                        {% else %}
+                                            <i class="fa-solid fa-star empty-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <p class="analysis-rating-number">
+                                    {% if department.average_rating is not none %}
+                                        {{ "%.1f"|format(department.average_rating) }} / 5
+                                    {% else %}
+                                        لا يوجد تقييم بعد
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>الشكاوى المتأخرة</strong></p>
+                                <p>{{ department.overdue_complaints_count }}</p>
+                            </div>
+
+                            <div class="analysis-stat-box">
+                                <p><strong>ضمن المهلة</strong></p>
+                                <p>{{ department.on_time_complaints_count }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card empty-state-card">
+                <p class="empty-state">لا توجد بيانات حاليًا.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleNavbar() {
+            const navLinks = document.getElementById("navbarLinks");
+            const navIcon = document.getElementById("navToggleIcon");
+
+            navLinks.classList.toggle("show");
+
+            if (navLinks.classList.contains("show")) {
+                navIcon.classList.remove("fa-bars");
+                navIcon.classList.add("fa-xmark");
+            } else {
+                navIcon.classList.remove("fa-xmark");
+                navIcon.classList.add("fa-bars");
+            }
+        }
+
+        let lastScrollTop = 0;
+        const navbar = document.querySelector(".main-navbar");
+
+        window.addEventListener("scroll", function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (navbar) {
+                if (currentScroll > lastScrollTop && currentScroll > 80) {
+                    navbar.classList.add("navbar-hidden");
+                } else {
+                    navbar.classList.remove("navbar-hidden");
+                }
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل التصنيف</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="main-navbar">
+        <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+        <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+            <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+        </button>
+
+        <div class="navbar-links" id="navbarLinks">
+            <a href="/admin">لوحة الأدمن</a>
+            <a href="/manage_categories">إدارة التصنيفات</a>
+            <a href="/logout" class="logout-link">تسجيل الخروج</a>
+        </div>
+    </nav>
+
+    <div class="page-container edit-category-page">
+        <div class="page-header">
+            <h1>تعديل اسم التصنيف</h1>
+            <p class="page-subtitle">يمكنك تعديل اسم التصنيف الحالي وحفظ التغييرات</p>
+        </div>
+
+        {% if category %}
+            <div class="card form-card edit-category-form-card">
+                <form method="POST">
+                    <div class="form-group">
+                        <label>اسم التصنيف الحالي</label>
+                        <input type="text" name="category_name" value="{{ category.category_name }}" required>
+                    </div>
+
+                    <div class="actions-row" style="margin-top: 18px;">
+                        <button type="submit" class="btn btn-primary">حفظ التعديل</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="card-soft center-text edit-category-message-box">
+                <p style="font-weight: 700;">{{ message }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleNavbar() {
+            const navLinks = document.getElementById("navbarLinks");
+            const navIcon = document.getElementById("navToggleIcon");
+
+            navLinks.classList.toggle("show");
+
+            if (navLinks.classList.contains("show")) {
+                navIcon.classList.remove("fa-bars");
+                navIcon.classList.add("fa-xmark");
+            } else {
+                navIcon.classList.remove("fa-xmark");
+                navIcon.classList.add("fa-bars");
+            }
+        }
+
+        let lastScrollTop = 0;
+        const navbar = document.querySelector(".main-navbar");
+
+        window.addEventListener("scroll", function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (navbar) {
+                if (currentScroll > lastScrollTop && currentScroll > 80) {
+                    navbar.classList.add("navbar-hidden");
+                } else {
+                    navbar.classList.remove("navbar-hidden");
+                }
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+</body>
+</html>

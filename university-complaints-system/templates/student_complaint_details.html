@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الشكوى</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="main-navbar">
+    <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+   <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+    <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+</button>
+
+    <div class="navbar-links" id="navbarLinks">
+        <a href="/my_complaints">شكاواي</a>
+        <a href="/student">لوحة الطالب</a>
+        <a href="/logout" class="logout-link">تسجيل الخروج</a>
+    </div>
+</nav>
+    <div class="page-container">
+        <div class="page-header">
+            <h1>تفاصيل الشكوى</h1>
+            <p class="page-subtitle">يمكنك من هنا متابعة تفاصيل الشكوى وجميع التحديثات المتعلقة بها</p>
+        </div>
+
+        {% if complaint %}
+            <div class="card details-main-card">
+                <p><strong>رقم الشكوى:</strong> {{ complaint.complaint_id }}</p>
+                <p><strong>العنوان:</strong> {{ complaint.title }}</p>
+                <p><strong>الوصف:</strong> {{ complaint.description }}</p>
+                <p><strong>التصنيف:</strong> {{ complaint.category_name }}</p>
+                <p><strong>القسم الأساسي:</strong> {{ complaint.department_name }}</p>
+
+                <p><strong>الحالة:</strong>
+                    {% if complaint.status == 'Pending' %}
+                        <span class="status-text status-pending">بانتظار المعالجة</span>
+                    {% elif complaint.status == 'In Progress' %}
+                        <span class="status-text status-progress">قيد المعالجة</span>
+                    {% elif complaint.status == 'Resolved' %}
+                        <span class="status-text status-resolved">محلولة</span>
+                    {% elif complaint.status == 'Cancelled' %}
+                        <span class="status-text status-cancelled">ملغاة</span>
+                    {% else %}
+                        {{ complaint.status }}
+                    {% endif %}
+                </p>
+
+                <p><strong>مدة المعالجة المتوقعة:</strong> {{ complaint.sla_days }} يوم</p>
+
+                <p><strong>وضع المهلة الزمنية:</strong>
+                    {% if is_overdue %}
+                        <span class="status-overdue">متأخرة</span>
+                    {% else %}
+                        <span class="status-on-time">ضمن المدة</span>
+                    {% endif %}
+                </p>
+
+                <p><strong>المرحلة الحالية:</strong> {{ complaint.stage_name }}</p>
+                <p><strong>تاريخ التقديم:</strong> {{ complaint.submitted_at }}</p>
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="card-soft center-text details-message-box">
+                <p style="font-weight: 700;">{{ message }}</p>
+            </div>
+        {% endif %}
+
+        <div class="section-block">
+            <h2>المرفقات</h2>
+            {% if attachments %}
+                <div class="table-like-list details-list-wrap">
+                    {% for attachment in attachments %}
+                        <div class="card-soft">
+                            <p><strong>اسم الملف:</strong> {{ attachment.file_name }}</p>
+                            <p><a class="file-link" href="/uploads/{{ attachment.file_name }}" target="_blank">فتح / تحميل الملف</a></p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا توجد مرفقات لهذه الشكوى.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>ردود الموظف</h2>
+            {% if responses %}
+                <div class="table-like-list details-list-wrap">
+                    {% for response in responses %}
+                        <div class="card-soft">
+                            <p><strong>الرد:</strong> {{ response.response_text }}</p>
+                            <p><strong>تاريخ الرد:</strong> {{ response.response_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا توجد ردود على هذه الشكوى حتى الآن.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>تعليقاتي على الشكوى</h2>
+            {% if comments %}
+                <div class="table-like-list details-list-wrap">
+                    {% for comment in comments %}
+                        <div class="card-soft comment-soft-box">
+                            <p><strong>تعليقي:</strong> {{ comment.comment_text }}</p>
+                            <p><strong>تاريخ التعليق:</strong> {{ comment.comment_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا توجد تعليقات منك على هذه الشكوى حتى الآن.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>سجل المعالجة</h2>
+            {% if processing_logs %}
+                <div class="table-like-list details-list-wrap">
+                    {% for log in processing_logs %}
+                        <div class="card-soft">
+                            <p><strong>نوع الحركة:</strong>
+                                {% if log.action_type == 'forward' %}
+                                    إرسال إلى المرحلة التالية
+                                {% elif log.action_type == 'backward' %}
+                                    إرجاع إلى المرحلة السابقة
+                                {% elif log.action_type == 'transfer' %}
+                                    تحويل إلى قسم آخر
+                                {% else %}
+                                    {{ log.action_type }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>من المرحلة:</strong>
+                                {% if log.from_stage == 1 %}
+                                    المرحلة الأولى
+                                {% elif log.from_stage == 2 %}
+                                    المرحلة الثانية
+                                {% elif log.from_stage == 3 %}
+                                    المرحلة الثالثة
+                                {% else %}
+                                    {{ log.from_stage }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>إلى المرحلة:</strong>
+                                {% if log.to_stage == 1 %}
+                                    المرحلة الأولى
+                                {% elif log.to_stage == 2 %}
+                                    المرحلة الثانية
+                                {% elif log.to_stage == 3 %}
+                                    المرحلة الثالثة
+                                {% else %}
+                                    {{ log.to_stage }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>من القسم:</strong> {{ log.from_department_name }}</p>
+                            <p><strong>إلى القسم:</strong> {{ log.to_department_name }}</p>
+                            <p><strong>التاريخ:</strong> {{ log.action_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">لا يوجد سجل معالجة حتى الآن.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-block">
+            <h2>تقييم المعالجة</h2>
+
+            {% if complaint.status == 'Resolved' %}
+                {% if feedback %}
+                    <div class="card feedback-card">
+                     <p><strong>تقييمك:</strong></p>
+<div class="feedback-stars-display">
+    {% for i in range(1, 6) %}
+        {% if i <= feedback.rating %}
+            <i class="fa-solid fa-star filled-star"></i>
+        {% else %}
+            <i class="fa-solid fa-star empty-star"></i>
+        {% endif %}
+    {% endfor %}
+</div>
+                        <p><strong>ملاحظتك:</strong> {{ feedback.feedback_note }}</p>
+                        <p><strong>تاريخ التقييم:</strong> {{ feedback.feedback_date }}</p>
+                    </div>
+                {% else %}
+                    <div class="card form-card details-form-card">
+                        <form method="POST">
+                            <div class="form-group">
+    <label>قيّم المعالجة من 1 إلى 5:</label>
+
+    <div class="star-rating">
+        <input type="radio" id="star5" name="rating" value="5" required>
+        <label for="star5" title="5 - ممتاز"><i class="fa-solid fa-star"></i></label>
+
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4" title="4 - جيد"><i class="fa-solid fa-star"></i></label>
+
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3" title="3 - مقبول"><i class="fa-solid fa-star"></i></label>
+
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2" title="2 - ضعيف"><i class="fa-solid fa-star"></i></label>
+
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1" title="1 - ضعيف جدًا"><i class="fa-solid fa-star"></i></label>
+    </div>
+
+    <div class="rating-hint">اضغط على النجمة المناسبة لتقييم المعالجة</div>
+</div>
+
+<div class="form-group">
+    <label>ملاحظة إضافية (اختياري):</label>
+    <textarea name="feedback_note" rows="4"></textarea>
+</div>
+
+<div class="actions-row" style="margin-top: 18px;">
+    <button type="submit" name="action" value="add_feedback" class="btn btn-primary">إرسال التقييم</button>
+</div>
+                        </form>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="card empty-state-card">
+                    <p class="empty-state">يمكنك تقييم الشكوى بعد حلها فقط.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if complaint.status != 'Resolved' and complaint.status != 'Cancelled' %}
+            <div class="section-block">
+                <h2>إضافة تعليق جديد</h2>
+                <div class="card form-card details-form-card">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>اكتب تعليقك</label>
+                            <textarea name="comment_text" rows="5"></textarea>
+                        </div>
+
+                        <div class="actions-row" style="margin-top: 18px;">
+                            <button type="submit" name="action" value="add_comment" class="btn btn-primary">إرسال التعليق</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if complaint.status != 'Resolved' and complaint.status != 'Cancelled' %}
+            <div class="section-block">
+                <h2>إرفاق ملف جديد</h2>
+                <div class="card form-card details-form-card">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>اختر ملفًا لإرفاقه</label>
+                            <input type="file" name="new_attachment">
+                        </div>
+
+                        <div class="actions-row" style="margin-top: 18px;">
+                            <button type="submit" name="action" value="add_attachment" class="btn btn-primary">رفع الملف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+       
+    </div>
+<script>
+    function toggleNavbar() {
+        const navLinks = document.getElementById("navbarLinks");
+        const navIcon = document.getElementById("navToggleIcon");
+
+        navLinks.classList.toggle("show");
+
+        if (navLinks.classList.contains("show")) {
+            navIcon.classList.remove("fa-bars");
+            navIcon.classList.add("fa-xmark");
+        } else {
+            navIcon.classList.remove("fa-xmark");
+            navIcon.classList.add("fa-bars");
+        }
+    }
+
+    let lastScrollTop = 0;
+    const navbar = document.querySelector(".main-navbar");
+
+    window.addEventListener("scroll", function () {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScroll > lastScrollTop && currentScroll > 80) {
+            navbar.classList.add("navbar-hidden");
+        } else {
+            navbar.classList.remove("navbar-hidden");
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+</script>
+</body>
+</html>

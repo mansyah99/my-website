@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة إدارة الشكاوى</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="home-page">
+
+    <div class="page-container">
+        <section class="hero-section clean-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">مرحباً بك في منصة إدارة الشكاوى</h1>
+
+                <p class="hero-text" style=" max-width: 620px;
+  transform: translateY(18px);">
+                    منصة إلكترونية حديثة لتنظيم الشكاوى الجامعية ومتابعتها ومعالجتها
+                    عبر مسار واضح ومتعدد المراحل، مع الحفاظ على الخصوصية
+                    وسهولة الاستخدام وسرعة الوصول للمعلومة.
+                </p>
+
+                <div class="hero-actions " style=" max-width: 620px;
+  transform: translateY(32px);">
+                    <a href="/login" class="btn btn-primary hero-btn">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        تسجيل الدخول
+                    </a>
+
+                    <a href="/register" class="btn btn-secondary hero-btn">
+                        <i class="fa-solid fa-user-plus"></i>
+                        إنشاء حساب طالب
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-image-wrap">
+                <img
+                    src="{{ url_for('static', filename='images/223.png') }}"
+                    alt="Complaint Management Illustration"
+                    class="hero-image"
+                   
+                >
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>

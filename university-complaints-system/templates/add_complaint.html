@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقديم شكوى</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>تقديم شكوى جديدة</h1>
+            <p class="page-subtitle">
+                أدخل بيانات الشكوى بدقة، ويمكنك أولًا فحص وجود شكاوى مشابهة قبل الإرسال
+            </p>
+        </div>
+
+        <div class="card form-card">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="category_id">التصنيف</label>
+                    <select name="category_id" id="category_id" required>
+                        {% for category in categories %}
+                            <option value="{{ category.category_id }}"
+                                {% if form_data.category_id == category.category_id|string %}selected{% endif %}>
+                                {{ category.category_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">عنوان الشكوى</label>
+                    <input type="text" id="title" name="title" value="{{ form_data.title }}" placeholder="أدخل عنوانًا واضحًا للشكوى" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">وصف الشكوى</label>
+                    <textarea id="description" name="description" rows="6" placeholder="اشرح تفاصيل الشكوى بشكل واضح" required>{{ form_data.description }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="attachment">إرفاق ملف (اختياري)</label>
+                    <input type="file" id="attachment" name="attachment">
+                </div>
+
+                <div class="actions-row" style="margin-top: 22px;">
+                    <button type="submit" name="action" value="check_similarity" class="btn btn-secondary">
+                        فحص الشكاوى المشابهة
+                    </button>
+
+                    <button type="submit" name="action" value="submit_complaint" class="btn btn-primary">
+                        إرسال الشكوى
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if message %}
+            <div class="card-soft center-text" style="margin: 18px auto 0; width: min(100%, 700px);">
+                <p style="font-weight: 700;">{{ message }}</p>
+            </div>
+        {% endif %}
+
+        {% if warning_message %}
+            <div class="card-soft center-text" style="margin: 18px auto 0; width: min(100%, 700px);">
+                <p style="color: var(--color-warning); font-weight: 800;">{{ warning_message }}</p>
+            </div>
+        {% endif %}
+
+        {% if similar_complaints %}
+            <div class="section-block">
+                <div class="page-header" style="margin-bottom: 16px;">
+                    <h2>شكاوى مشابهة محتملة</h2>
+                    <p class="page-subtitle">راجع النتائج التالية قبل تأكيد الإرسال</p>
+                </div>
+
+                <div class="table-like-list">
+                    {% for complaint in similar_complaints %}
+                        <div class="card">
+                            <p><strong>عنوان مشابه:</strong> {{ complaint.title }}</p>
+
+                            <p><strong>الحالة:</strong>
+                                {% if complaint.status == 'Pending' %}
+                                    <span class="badge badge-pending">بانتظار المعالجة</span>
+                                {% elif complaint.status == 'In Progress' %}
+                                    <span class="badge badge-progress">قيد المعالجة</span>
+                                {% elif complaint.status == 'Resolved' %}
+                                    <span class="badge badge-resolved">محلولة</span>
+                                {% elif complaint.status == 'Cancelled' %}
+                                    <span class="badge badge-cancelled">ملغاة</span>
+                                {% else %}
+                                    {{ complaint.status }}
+                                {% endif %}
+                            </p>
+
+                            <p><strong>نسبة التشابه:</strong> {{ complaint.similarity_percent }}%</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if require_confirmation %}
+            <div class="card form-card" style="margin-top: 22px;">
+                <h2>تأكيد إضافي</h2>
+                <p class="page-subtitle" style="text-align: right;">
+                    توجد شكاوى مشابهة، إذا كنت متأكدًا من رغبتك في الإرسال فتابع من الزر التالي
+                </p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="category_id" value="{{ form_data.category_id }}">
+                    <input type="hidden" name="title" value="{{ form_data.title }}">
+                    <input type="hidden" name="description" value="{{ form_data.description }}">
+                    <input type="hidden" name="confirmed_submission" value="yes">
+
+                    <div class="actions-row" style="margin-top: 18px;">
+                        <button type="submit" name="action" value="submit_complaint" class="btn btn-primary">
+                            أنا متأكد وأريد إرسال الشكوى
+                        </button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="student-links-row add-complaint-links-row">
+            <a href="/student">العودة إلى لوحة الطالب</a>
+            <a href="/logout" class="logout-link">تسجيل الخروج</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

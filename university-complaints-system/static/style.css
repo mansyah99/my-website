@@ -1,0 +1,1428 @@
+:root {
+  --color-primary: #5b7db1;
+  --color-primary-dark: #46689b;
+  --color-primary-light: #dfe9f7;
+  --color-accent: #7fb3c9;
+
+  --color-bg: #eef4fb;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fbff;
+
+  --color-text: #243447;
+  --color-text-light: #5f6f82;
+  --color-border: #d9e3f0;
+
+  --color-success: #5fa57a;
+  --color-warning: #d4a24c;
+  --color-danger: #c96b6b;
+  --color-info: #6ea8c7;
+
+  --shadow-soft: 0 8px 24px rgba(50, 80, 120, 0.08);
+  --shadow-hover: 0 10px 28px rgba(50, 80, 120, 0.12);
+
+  --radius-xl: 22px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --transition: 0.25s ease;
+
+  --container-width: 1100px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Cairo", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+a {
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+  color: var(--color-text);
+  font-weight: 800;
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 1.45rem;
+  margin-bottom: 14px;
+}
+
+p {
+  margin: 8px 0;
+}
+
+.page-container {
+  width: min(100% - 32px, var(--container-width));
+  margin: 32px auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.page-subtitle {
+  color: var(--color-text-light);
+  margin-top: 0;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 24px;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card-soft {
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.section-block {
+  margin: 24px 0;
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 26px 0;
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--color-text-light);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  line-height: 1.2;
+}
+
+.form-card {
+  width: min(100%, 700px);
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--color-text);
+  font: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(91, 125, 177, 0.12);
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary,
+button[type="submit"] {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.btn-secondary:hover {
+  filter: brightness(0.98);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  filter: brightness(0.96);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: center;
+}
+
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.badge-pending {
+  background: rgba(212, 162, 76, 0.15);
+  color: #9a6c1f;
+}
+
+.badge-progress {
+  background: rgba(110, 168, 199, 0.16);
+  color: #2d6f92;
+}
+
+.badge-resolved {
+  background: rgba(95, 165, 122, 0.16);
+  color: #2f7649;
+}
+
+.badge-cancelled {
+  background: rgba(201, 107, 107, 0.16);
+  color: #9a3f3f;
+}
+
+.status-overdue {
+  color: var(--color-danger);
+  font-weight: 800;
+}
+
+.status-on-time {
+  color: var(--color-success);
+  font-weight: 800;
+}
+
+.info-list p strong {
+  color: var(--color-text);
+}
+
+.center-text {
+  text-align: center;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--color-text-light);
+  padding: 24px 12px;
+}
+
+.table-like-list {
+  display: grid;
+  gap: 16px;
+}
+
+.top-nav {
+  width: min(100% - 32px, var(--container-width));
+  margin: 18px auto 0;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 14px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.brand i {
+  color: var(--color-primary);
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.nav-link:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+}
+
+.file-link {
+  font-weight: 700;
+}
+
+.icon-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-title i {
+  color: var(--color-primary);
+}
+
+hr.soft {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 20px 0;
+}
+
+@media (max-width: 992px) {
+  .stats-grid,
+  .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    width: min(100% - 20px, var(--container-width));
+    margin: 20px auto;
+  }
+
+  .top-nav {
+    width: min(100% - 20px, var(--container-width));
+    padding: 12px 14px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .stats-grid,
+  .grid-4,
+  .grid-3,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .card,
+  .stat-card,
+  .chart-card {
+    padding: 18px;
+  }
+
+  input,
+  select,
+  textarea,
+  button,
+  .btn {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    line-height: 1.7;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .stat-number {
+    font-size: 1.7rem;
+  }
+
+  .nav-links {
+    width: 100%;
+  }
+
+  .nav-link {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+.clean-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 36px;
+  align-items: center;
+  min-height: 78vh;
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  line-height: 1.35;
+  margin-bottom: 18px;
+  text-align: right;
+}
+
+.hero-text {
+  font-size: 1.08rem;
+  color: var(--color-text-light);
+  max-width: 650px;
+  margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.hero-btn {
+  min-width: 180px;
+  padding: 14px 22px;
+  font-size: 1rem;
+}
+
+.hero-image-wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 0;
+  transform: translateY(34px);
+}
+
+
+.hero-image {
+  width: min(100%, 640px);
+  max-height: 500px;
+  object-fit: contain;
+  display: block;
+  
+}
+
+.btn-primary,
+button[type="submit"] {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  border: 1px solid transparent;
+}
+
+.btn-secondary:hover {
+  background: #d3e2f6;
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 1100px) {
+  .clean-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    min-height: 82vh;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    transform: translateY(16px);
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+  }
+
+  .hero-text {
+    font-size: 1.12rem;
+    line-height: 1.9;
+    margin-inline: 0;
+  }
+
+  .hero-actions {
+    justify-content: flex-start;
+  }
+
+  .hero-image-wrap {
+    justify-content: center;
+    padding-left: 0;
+    transform: translateY(28px);
+  }
+
+  .hero-image {
+    width: min(100%, 460px);
+    max-height: 360px;
+  }
+}
+
+@media (max-width: 820px) {
+  .clean-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 38px;
+    padding-bottom: 26px;
+    gap: 28px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+    order: 1;
+    transform: translateY(0);
+  }
+
+  .hero-title {
+    font-size: 2.4rem;
+    text-align: center;
+  }
+
+  .hero-text {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-image-wrap {
+    order: 2;
+    justify-content: center;
+    transform: translateY(0);
+  }
+
+  .hero-image {
+    width: min(100%, 420px);
+    max-height: 320px;
+  }
+}
+/*kkkkkkkkkkkkkkkkkkkkkkkkk  */
+
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 1.9rem;
+  }
+
+  .hero-text {
+    font-size: 1rem;
+  }
+
+  .hero-btn {
+    width: 100%;
+  }
+
+  .hero-image {
+    max-width: 100%;
+  }
+}
+
+.student-links-row {
+  margin-top: 85px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+/*  */
+.student-links-row a {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.student-links-row a:hover {
+  color: var(--color-primary);
+  background: rgba(91, 125, 177, 0.08);
+}
+
+.student-links-row .logout-link {
+  color: #9a3f3f;
+}
+
+.student-links-row .logout-link:hover {
+  color: #8a2f2f;
+  background: rgba(201, 107, 107, 0.08);
+}
+.student-cards-grid {
+  margin-top: 38px;
+}
+
+.employee-stats-grid {
+  margin-top: 26px;
+  margin-bottom: 26px;
+}
+
+.employee-main-card {
+  margin-top: 8px;
+}
+.employee-stats-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.employee-charts-grid {
+  margin-top: 10px;
+  margin-bottom: 26px;
+}
+
+.employee-charts-grid .chart-card {
+  min-height: 380px;
+}
+
+.employee-charts-grid canvas {
+  width: 100% !important;
+  max-height: 280px;
+  margin-top: 10px;
+}
+
+@media (max-width: 992px) {
+  .employee-stats-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .employee-stats-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-charts-grid .chart-card {
+    min-height: auto;
+  }
+}
+/* =========================
+   admin dashboard layout
+   هذا الجزء خاص بترتيب بطاقات الإحصائيات في لوحة الأدمن
+========================= */
+.admin-stats-grid {
+  margin-top: 26px;
+  margin-bottom: 26px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* =========================
+   admin charts section
+   هذا الجزء خاص بمكان وحجم المخططات في لوحة الأدمن
+========================= */
+.admin-charts-grid {
+  margin-top: 10px;
+  margin-bottom: 26px;
+}
+
+.admin-charts-grid .chart-card {
+  min-height: 380px;
+}
+
+.admin-charts-grid canvas {
+  width: 100% !important;
+  max-height: 280px;
+  margin-top: 10px;
+}
+
+/* =========================
+   admin actions card
+   هذا الجزء خاص بكرت أدوات الإدارة الرئيسي
+========================= */
+.admin-actions-card {
+  margin-top: 8px;
+}
+
+/* =========================
+   admin action boxes
+   هذا الجزء خاص بالمربعات التي تحتوي روابط الإدارة
+   مثل: إضافة موظف - إدارة الأقسام - إدارة التصنيفات
+========================= */
+.admin-actions-grid {
+  margin-top: 10px;
+}
+
+.admin-action-box {
+  display: block;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-soft);
+}
+
+.admin-action-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  background: #ffffff;
+}
+
+.admin-action-title {
+  display: block;
+  color: var(--color-primary-dark);
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.admin-action-desc {
+  display: block;
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* =========================
+   responsive for admin page
+   هذا الجزء يجعل لوحة الأدمن متجاوبة مع الشاشات الأصغر
+========================= */
+@media (max-width: 992px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-charts-grid .chart-card {
+    min-height: auto;
+  }
+}
+/* add complaint page
+   هذا الجزء يحسن مظهر بطاقات الشكاوى المشابهة ورسائل الصفحة */
+.form-card + .card-soft {
+  margin-top: 16px;
+}
+.complaint-links-row{
+    width: min(100%, 700px);
+    margin: 28px auto 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+/* my complaints page
+   هذا الجزء خاص بعرض بطاقات الشكاوى في صفحة شكاواي */
+.my-complaints-list {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+.complaint-card {
+  width: 100%;
+}
+
+/* complaint actions inside each card
+   هذا الجزء خاص بترتيب أزرار عرض التفاصيل وإلغاء الشكوى */
+.complaint-card-actions {
+  gap: 12px;
+}
+
+.inline-form {
+  margin: 0;
+}
+
+/* empty state card
+   هذا الجزء يظهر بشكل أنيق إذا ما كان عند الطالب أي شكاوى */
+.empty-state-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* bottom links for my complaints page
+   هذا الجزء خاص فقط بروابط أسفل صفحة شكاواي */
+.my-complaints-links-row {
+  width: min(100%, 760px);
+  margin: 28px auto 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+/* plain status text
+   هذا الجزء خاص بعرض الحالة كنص ملوّن فقط بدون خلفية */
+.status-text {
+  font-weight: 800;
+}
+
+.status-pending {
+  color: #9a6c1f;
+}
+
+.status-progress {
+  color: #2d6f92;
+}
+
+.status-resolved {
+  color: #2f7649;
+}
+
+.status-cancelled {
+  color: #9a3f3f;
+}
+/* student complaint details page
+   هذا الجزء خاص بعرض البطاقة الرئيسية لتفاصيل الشكوى */
+.details-main-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* message box in details page
+   هذا الجزء خاص برسالة النجاح أو التنبيه داخل صفحة التفاصيل */
+.details-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+
+/* repeated lists inside details page
+   هذا الجزء خاص بعرض القوائم المتكررة مثل المرفقات والردود والسجل */
+.details-list-wrap {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* special soft box for student comments
+   هذا الجزء خاص بخلفية تعليقات الطالب */
+.comment-soft-box {
+  background: #eef7ff;
+}
+
+/* feedback card
+   هذا الجزء خاص بكرت التقييم بعد حل الشكوى */
+.feedback-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* forms inside details page
+   هذا الجزء خاص بفورمات التقييم والتعليق والإرفاق داخل صفحة التفاصيل */
+.details-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* bottom links in details page
+   هذا الجزء خاص بروابط أسفل صفحة التفاصيل */
+.details-links-row {
+  width: min(100%, 760px);
+  margin: 30px auto 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+/* =========================
+   responsive navbar
+   هذا الجزء خاص بالشريط العلوي الموحد في الصفحات
+========================= */
+.main-navbar {
+  width: min(100% - 32px, var(--container-width));
+  margin: 18px auto 0;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 12px;
+  z-index: 1000;
+}
+
+/* brand / اسم المنصة */
+.main-navbar .navbar-brand {
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  white-space: nowrap;
+}
+
+/* الروابط على الشاشات الكبيرة */
+.main-navbar .navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+/* شكل الروابط */
+.main-navbar .navbar-links a {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.main-navbar .navbar-links a:hover {
+  color: var(--color-primary);
+  background: rgba(91, 125, 177, 0.08);
+}
+
+/* رابط الخروج */
+.main-navbar .navbar-links .logout-link {
+  color: #9a3f3f;
+}
+
+.main-navbar .navbar-links .logout-link:hover {
+  color: #8a2f2f;
+  background: rgba(201, 107, 107, 0.08);
+}
+
+/* زر الهامبرغر */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.nav-toggle i {
+  font-size: 1.3rem;
+  color: var(--color-primary-dark);
+}
+
+/* القائمة بالموبايل */
+@media (max-width: 768px) {
+  .main-navbar {
+    width: min(100% - 20px, var(--container-width));
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-navbar .navbar-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 12px;
+  }
+
+  .main-navbar .navbar-links.show {
+    display: flex;
+  }
+
+  .main-navbar .navbar-links a {
+    width: 100%;
+    padding: 10px 12px;
+  }
+}
+/* navbar hide on scroll
+   هذا الجزء يجعل الشريط العلوي يختفي عند النزول ويظهر عند الطلوع */
+.main-navbar {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.main-navbar.navbar-hidden {
+  transform: translateY(-140%);
+  opacity: 0;
+}
+
+/* nav toggle icon
+   هذا الجزء يحسن شكل زر القائمة في الموبايل */
+.nav-toggle i {
+  transition: var(--transition);
+}
+/* department complaints page
+   هذا الجزء خاص بكرت الفلترة في صفحة شكاوى القسم */
+.department-filter-card {
+  width: min(100%, 760px);
+  margin: 0 auto 24px;
+}
+
+/* department complaints list
+   هذا الجزء خاص بعرض بطاقات شكاوى القسم */
+.department-complaints-list {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* filter actions
+   هذا الجزء خاص بزر تطبيق البحث والفلترة */
+.department-filter-actions {
+  gap: 12px;
+}
+
+/* department page message
+   هذا الجزء خاص برسالة الصفحة إذا وجدت */
+.department-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+/* employee complaint details page
+   هذا الجزء خاص بروابط وعرض محتوى صفحة تفاصيل الشكوى لدى الموظف */
+.employee-details-page .details-main-card,
+.employee-details-page .details-list-wrap,
+.employee-details-page .details-message-box,
+.employee-details-page .details-form-card {
+  width: min(100%, 760px);
+  margin-inline: auto;
+}
+/* manage departments page
+   هذا الجزء خاص بعرض وتوسيط نموذج إضافة القسم */
+.admin-department-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* departments list
+   هذا الجزء خاص بقائمة الأقسام الحالية */
+.admin-departments-list {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+/* edit department page
+   هذا الجزء خاص بتوسيط نموذج تعديل القسم */
+.edit-department-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* edit department message
+   هذا الجزء خاص برسالة النجاح أو التنبيه في صفحة تعديل القسم */
+.edit-department-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+/* manage categories page
+   هذا الجزء خاص بتوسيط نموذج إضافة التصنيف */
+.manage-categories-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* manage categories message
+   هذا الجزء خاص برسالة النجاح أو التنبيه في صفحة إدارة التصنيفات */
+.manage-categories-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+
+/* categories list
+   هذا الجزء خاص بقائمة التصنيفات الحالية */
+.manage-categories-list {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+/* edit category page
+   هذا الجزء خاص بتوسيط نموذج تعديل التصنيف */
+.edit-category-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* edit category message
+   هذا الجزء خاص برسالة النجاح أو التنبيه في صفحة تعديل التصنيف */
+.edit-category-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+/* view employees page
+   هذا الجزء خاص بعرض أقسام الموظفين */
+.employees-departments-wrap {
+  width: min(100%, 920px);
+  margin: 0 auto;
+}
+
+.employee-department-card {
+  width: 100%;
+}
+
+.employee-department-title {
+  margin-bottom: 18px;
+}
+
+/* employee units
+   هذا الجزء خاص بصناديق الجهات الفرعية */
+.employee-units-wrap {
+  gap: 16px;
+}
+
+.employee-unit-box {
+  background: #f9fbff;
+}
+
+.employee-unit-title {
+  margin-bottom: 14px;
+}
+
+/* employee mini stats
+   هذا الجزء خاص بإحصائيات كل جهة فرعية */
+.employee-mini-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.employee-mini-stat-box {
+  background: #ffffff;
+  min-width: 120px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+
+/* employee cards
+   هذا الجزء خاص ببطاقات الموظفين داخل الجهة الفرعية */
+.employee-cards-wrap {
+  gap: 12px;
+}
+
+.employee-card-box {
+  width: 100%;
+}
+/* add employee page
+   هذا الجزء خاص بتوسيط نموذج إضافة الموظف */
+.add-employee-form-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+/* add employee message
+   هذا الجزء خاص برسالة النجاح أو التنبيه في صفحة إضافة الموظف */
+.add-employee-message-box {
+  width: min(100%, 760px);
+  margin: 18px auto 0;
+}
+/* complaints analysis page
+   هذا الجزء خاص بقائمة تحليل الأقسام */
+.complaints-analysis-list {
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+/* analysis department card
+   هذا الجزء خاص بكرت كل قسم في صفحة التحليل */
+.analysis-department-card {
+  width: 100%;
+}
+
+.analysis-department-title {
+  margin-bottom: 18px;
+}
+
+/* analysis stats grid
+   هذا الجزء خاص بترتيب إحصائيات القسم داخل شبكة */
+.analysis-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* analysis stat box
+   هذا الجزء خاص بصندوق كل رقم داخل القسم */
+.analysis-stat-box {
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.analysis-stat-box p:last-child {
+  margin-top: 8px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+  .analysis-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .analysis-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.hero-content {
+  max-width: 620px;
+  transform: translateY(16px);
+}
+/* add complaint bottom links
+   هذا الجزء خاص بروابط أسفل صفحة تقديم الشكوى */
+.add-complaint-links-row {
+  width: min(100%, 760px);
+  margin: 26px auto 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+/* star rating
+   هذا الجزء خاص بتقييم النجوم في صفحة تفاصيل الشكوى للطالب */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2rem;
+  color: #d6dcea;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f2c14e;
+}
+
+.star-rating input:checked ~ label {
+  color: #f2c14e;
+}
+
+.rating-hint {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+}
+/* feedback stars display
+   هذا الجزء خاص بعرض التقييم المحفوظ على شكل نجوم */
+.feedback-stars-display {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0 12px;
+}
+
+.feedback-stars-display i {
+  font-size: 1.5rem;
+}
+
+.filled-star {
+  color: #f2c14e;
+}
+
+.empty-star {
+  color: #d6dcea;
+}
+/* admin insights cards
+   هذا الجزء خاص بالكروت الذكية الإضافية في لوحة الأدمن */
+.admin-insights-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: -6px;
+  margin-bottom: 26px;
+}
+
+.insight-card .stat-number {
+  font-size: 1.7rem;
+}
+
+
+
+
+/* admin average rating
+   هذا الجزء خاص بعرض متوسط التقييم في لوحة الأدمن بشكل نجوم + رقم */
+.admin-rating-stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 8px 0 10px;
+}
+
+.admin-rating-stars i {
+  font-size: 1.2rem;
+}
+
+.admin-rating-number {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+/* admin dashboard responsive cards
+   هذا الجزء يضبط كروت الأدمن على الشاشات المتوسطة والصغيرة */
+@media (max-width: 1100px) {
+  .stats-grid.admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats-grid.admin-stats-grid .stat-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .stats-grid.admin-insights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-grid.admin-stats-grid,
+  .stats-grid.admin-insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid.admin-stats-grid .stat-card:last-child {
+    grid-column: auto;
+  }
+}
+/* analysis rating in complaints analysis
+   هذا الجزء خاص بعرض متوسط التقييم داخل صفحة تحليل الشكاوى */
+.analysis-rating-stars {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 8px 0 6px;
+}
+
+.analysis-rating-stars i {
+  font-size: 1rem;
+}
+
+.analysis-rating-number {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}

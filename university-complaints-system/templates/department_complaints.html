@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شكاوى القسم</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="main-navbar">
+        <div class="navbar-brand">منصة إدارة الشكاوى</div>
+
+        <button class="nav-toggle" type="button" onclick="toggleNavbar()" id="navToggleBtn">
+            <i class="fa-solid fa-bars" id="navToggleIcon"></i>
+        </button>
+
+        <div class="navbar-links" id="navbarLinks">
+            <a href="/employee">لوحة الموظف</a>
+            <a href="/logout" class="logout-link">تسجيل الخروج</a>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>شكاوى القسم</h1>
+            <p class="page-subtitle">استعرض شكاوى القسم، وابحث وفلتر حسب الحالة بسهولة</p>
+        </div>
+
+        <div class="card form-card department-filter-card">
+            <form method="GET">
+                <div class="form-group">
+                    <label for="status">فلترة حسب الحالة</label>
+                    <select name="status" id="status">
+                        <option value="" {% if not selected_status %}selected{% endif %}>كل الحالات</option>
+                        <option value="Pending" {% if selected_status == 'Pending' %}selected{% endif %}>قيد الانتظار</option>
+                        <option value="In Progress" {% if selected_status == 'In Progress' %}selected{% endif %}>قيد المعالجة</option>
+                        <option value="Resolved" {% if selected_status == 'Resolved' %}selected{% endif %}>تم الحل</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="search">البحث عن شكوى</label>
+                    <input type="text" id="search" name="search" value="{{ search_text }}" placeholder="أدخل عنوان الشكوى أو رقمها للبحث">
+                </div>
+
+                <div class="actions-row department-filter-actions" style="margin-top: 18px;">
+                    <button type="submit" class="btn btn-primary">تطبيق البحث والفلترة</button>
+                </div>
+            </form>
+        </div>
+
+        {% if complaints %}
+            <div class="table-like-list department-complaints-list">
+                {% for complaint in complaints %}
+                    <div class="card complaint-card">
+                        <p><strong>رقم الشكوى:</strong> {{ complaint.complaint_id }}</p>
+                        <p><strong>العنوان:</strong> {{ complaint.title }}</p>
+
+                        <p><strong>الحالة:</strong>
+                            {% if complaint.status == 'Pending' %}
+                                <span class="status-text status-pending">بانتظار المعالجة</span>
+                            {% elif complaint.status == 'In Progress' %}
+                                <span class="status-text status-progress">قيد المعالجة</span>
+                            {% elif complaint.status == 'Resolved' %}
+                                <span class="status-text status-resolved">محلولة</span>
+                            {% elif complaint.status == 'Cancelled' %}
+                                <span class="status-text status-cancelled">ملغاة</span>
+                            {% else %}
+                                {{ complaint.status }}
+                            {% endif %}
+                        </p>
+
+                        {% if complaint.is_overdue == 1 %}
+                            <p><strong>وضع المهلة الزمنية:</strong> <span class="status-overdue">متأخرة</span></p>
+                        {% else %}
+                            <p><strong>وضع المهلة الزمنية:</strong> <span class="status-on-time">ضمن المدة</span></p>
+                        {% endif %}
+
+                        <p><strong>المرحلة الحالية:</strong> {{ complaint.unit_name }}</p>
+                        <p><strong>تاريخ التقديم:</strong> {{ complaint.submitted_at }}</p>
+
+                        <div class="actions-row complaint-card-actions" style="margin-top: 16px;">
+                            <a href="/complaint_details/{{ complaint.complaint_id }}" class="btn btn-secondary">عرض التفاصيل</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card empty-state-card">
+                <p class="empty-state">لا توجد شكاوى مطابقة حاليًا.</p>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        function toggleNavbar() {
+            const navLinks = document.getElementById("navbarLinks");
+            const navIcon = document.getElementById("navToggleIcon");
+
+            navLinks.classList.toggle("show");
+
+            if (navLinks.classList.contains("show")) {
+                navIcon.classList.remove("fa-bars");
+                navIcon.classList.add("fa-xmark");
+            } else {
+                navIcon.classList.remove("fa-xmark");
+                navIcon.classList.add("fa-bars");
+            }
+        }
+
+        let lastScrollTop = 0;
+        const navbar = document.querySelector(".main-navbar");
+
+        window.addEventListener("scroll", function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > lastScrollTop && currentScroll > 80) {
+                navbar.classList.add("navbar-hidden");
+            } else {
+                navbar.classList.remove("navbar-hidden");
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+    </script>
+
+</body>
+</html>
